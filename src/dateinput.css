@@ -1,0 +1,94 @@
+/* date range input css -------------------------*/
+.dateinputpicker
+{
+    position: absolute;
+
+    background-color: #EFEFEF;
+    border: 1px solid #E5E5E5;
+
+    padding: 5px 10px;
+}
+
+.dateinputpicker .arrow {
+    position: absolute;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 14px solid #EFEFEF;
+    top: -10px;
+    left: 50%;
+}
+
+.dateinputpicker .arrow.arrow_outer {
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	border-bottom: 24px solid #E5E5E5;
+    top: calc(-10px - 2px);
+    left: calc(50% - 5px);
+
+    z-index: -1;
+}
+
+.dateinputpicker .control-top:before,
+.dateinputpicker .control-top:after {
+    content: " ";
+    display: table;
+}
+
+.dateinputpicker .control-top:after {
+    clear: both;
+}
+
+.dateinputpicker a {
+    text-decoration: none;
+}
+
+.dateinputpicker .control-top .prev {
+    float: left;
+}
+
+.dateinputpicker .control-top .next {
+    float: right;
+}
+
+.dateinputpicker table th,
+.dateinputpicker table td {
+    width: calc(100% / 7);
+
+    padding-right: 5px;
+    padding-bottom: 2px;
+    text-align: right;
+}
+
+.dateinputpicker table th {
+
+}
+
+.dateinputpicker table td {
+
+}
+
+.dateinputpicker table thead #hd-title {
+    text-align: center;
+}
+
+.dateinputpicker table tbody td:hover {
+    background-color: #59f2c0;
+}
+
+.dateinputpicker table .outside-day {
+    color: #BBB;
+}
+
+.dateinputpicker table .outside-day.weekend-day {
+    color: #ffafaf;
+}
+
+.dateinputpicker table .weekend-day {
+    color: #F00;
+}
+
+.dateinputpicker table .selected-day {
+    background-color: #59f2c0; !important;
+}
