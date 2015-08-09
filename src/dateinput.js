@@ -1,10 +1,15 @@
-/* Main plugin program -------------------------*/
+/* Main plugin program ---------------------------------------------------------------- */
 
 (function( $ ) {
-    $.fn.dateInput = function () {
-        var self = this;
+    var KEY_BIND = {
+        ENTER: 13
+    };
 
+    $.fn.dateInput = function (options) {
+        var self = this;
         var superfn_hide = this.hide;
+
+        var opts = $.extend( {}, $.fn.dateInput.defaults, options );
 
         this.hide = function () {
             superfn_hide.call(this);
@@ -27,9 +32,10 @@
             self.val(text);
         }
 
-        this.pickerObj = new PickerObj(this);
+        // Create calendar ----------------------------------------/
+        this.pickerObj = new PickerObj(this, opts);
 
-        this.btnDone = $("<a>").text("Done");
+        this.btnDone = $("<a>").addClass("btn btn-success btn-ms btn-block").text("Done");
         this.btnDone.click(function () {
             self.hidePicker();
         });
@@ -43,24 +49,35 @@
 
         // Events ----------------------------------------------------/
         $(this).click(function () {
-            var isAlreadyShow = self.isShow();
             $(".dateinputpicker").hide();
+            self.showPicker();
+        });
 
-            if (!isAlreadyShow)
-                return self.showPicker();
+        $(this).keypress(function(e) {
+            if(e.which === KEY_BIND.ENTER) {
+                self.pickerObj.changeDateFromInput($(this).val());
+            }
         });
 
         return this;
     }
 
-    var CALENDAR_VIEW_TYPE = {
-        DAY: "Day",
-        MONTH: "Month",
-        YEAR: "Year"
+    $.fn.dateInput.defaults = {
+        pressDelay: 300,
+        pressRepeatRate: 100
     };
 
-    function PickerObj (baseObj) {
+    // Picker object --------------------------------------------------------------------------------------------------/
+    var CALENDAR_VIEW_TYPE = {
+        DAY: "DAY",
+        MONTH: "MONTH",
+        YEAR: "YEAR"
+    };
+
+    function PickerObj (baseObj, opts) {
         this.baseObj = baseObj;
+        this.opts = opts;
+
         this.btnPrev;
         this.btnNext;
         this.btnDone;
@@ -76,21 +93,38 @@
         this.setupContent();
     }
 
-    // Picker object --------------------------------------------------------------------------------------------------/
     PickerObj.prototype.setupContent = function () {
         var self = this;
 
-        this.calendar = $("<table>")
+        this.calendar = $("<table>").attr("id", "containerCalendar")
                             .append($("<thead>"))
                             .append($("<tbody>"));
 
-        this.btnPrev = $("<a>").addClass("prev").text("Prev");
-        this.btnPrev.click(function () {
+        this.btnPrev = $("<a>").addClass("prev btn btn-default  btn-ms").text("Prev");
+        this.btnPrev.mousedown(function() {
+            var btn = this;
             self.viewPrev();
+            btn.heldTimeoutId = setTimeout(function () {
+                btn.heldIntervalId = setInterval(function() {
+                    self.viewPrev();
+                }, self.opts.pressRepeatRate);
+            }, self.opts.pressDelay);
+        }).bind("mouseup mouseleave", function() {
+            clearTimeout(this.heldTimeoutId);
+            clearInterval(this.heldIntervalId);
         });
-        this.btnNext = $("<a>").addClass("next").text("Next");
-        this.btnNext.click(function () {
+        this.btnNext = $("<a>").addClass("next btn btn-default  btn-ms").text("Next");
+        this.btnNext.mousedown(function() {
+            var btn = this;
             self.viewNext();
+            btn.heldTimeoutId = setTimeout(function () {
+                btn.heldIntervalId = setInterval(function() {
+                    self.viewNext();
+                }, self.opts.pressRepeatRate);
+            }, self.opts.pressDelay);
+        }).bind("mouseup mouseleave", function() {
+            clearTimeout(this.heldTimeoutId);
+            clearInterval(this.heldIntervalId);
         });
 
         this.pickerContent = $("<div>")
@@ -107,10 +141,8 @@
 
     PickerObj.prototype.updateCalendar = function (targetDate) {
 
-        if (targetDate === undefined) {
-            console.log("No targetDate defined!");
-            return;
-        }
+        if (targetDate === undefined)
+            targetDate = this.selectedDate;
 
         var self = this;
 
@@ -124,7 +156,7 @@
         switch (this.viewType)
         {
             case CALENDAR_VIEW_TYPE.DAY:
-                var btnTitle = $("<tr>")
+                var btnTitle = $("<tr>").addClass("btn-primary")
                                 .append($("<th>").text(targetDate.format("YYYY MMMM")).attr("id", "hd-title").attr("colspan", 7));
                 btnTitle.click (function () {
                     self.viewType = CALENDAR_VIEW_TYPE.MONTH;
@@ -163,7 +195,7 @@
                         var index = weeks + "" + days;
                         var dateButton = $("<td>").text(tmpDate.date()).addClass(dayStyleClass).attr("data-index", index);
                         dateButton.click (function() {
-                            self.changeDate($(this).attr("data-index"));
+                            self.changeDateFromCalendar($(this).attr("data-index"));
                         });
 
                         row.append(dateButton);
@@ -204,16 +236,26 @@
             case CALENDAR_VIEW_TYPE.YEAR:
                 break;
         }
+
+        this.calendar.attr("data-view-type", this.viewType);
     }
 
-    PickerObj.prototype.changeDate = function (index) {
+    PickerObj.prototype.changeDateFromCalendar = function (index) {
         var selectedNewDate = this.dates[index];
-        console.log("Selected new date:", selectedNewDate);
+        //console.log("Selected new date:", selectedNewDate);
         this.selectedDate = selectedNewDate;
         this.viewMonth = this.selectedDate.clone();
         this.updateCalendar(this.selectedDate);
 
         this.baseObj.updateField(this.selectedDate.format("YYYY-MM-DD"));
+    }
+
+    PickerObj.prototype.changeDateFromInput = function (strDate) {
+        if (isNaN(Date.parse(strDate)))
+            return;
+
+        this.selectedDate = moment(Date.parse(strDate));
+        this.updateCalendar();
     }
 
     PickerObj.prototype.viewPrev = function () {

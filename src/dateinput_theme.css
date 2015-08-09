@@ -1,0 +1,43 @@
+/* date input theme css -------------------------*/
+.dateinputpicker .btn {
+    padding: 5px 10px;
+    background-color: #CCC;
+
+    border: 1px solid #CCC;
+
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.dateinputpicker .btn-default {
+    background-color: #EEE;
+}
+
+.dateinputpicker .btn-default:hover {
+    color: #FFF;
+    background-color: #5ed6af;
+}
+
+.dateinputpicker .btn-primary {
+    color: #FFF;
+    background-color: #08d894;
+}
+
+.dateinputpicker .btn-primary:hover {
+    background-color: #07bf83;
+}
+
+.dateinputpicker .btn-success {
+    color: #FFF;
+    background-color: #58c5a2;
+}
+
+.dateinputpicker .btn-success:hover {
+    background-color: #5ed6af;
+}
+
+.dateinputpicker .btn-block {
+    display: block;
+    width: auto;
+}

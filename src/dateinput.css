@@ -1,4 +1,4 @@
-/* date range input css -------------------------*/
+/* date input css -------------------------*/
 .dateinputpicker
 {
     position: absolute;
@@ -6,7 +6,15 @@
     background-color: #EFEFEF;
     border: 1px solid #E5E5E5;
 
-    padding: 5px 10px;
+    padding: 15px 20px;
+}
+
+.dateinputpicker *
+{
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    transition: all 0.3s;
 }
 
 .dateinputpicker .arrow {
@@ -52,43 +60,52 @@
     float: right;
 }
 
-.dateinputpicker table th,
-.dateinputpicker table td {
-    width: calc(100% / 7);
+.dateinputpicker #containerCalendar {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
+.dateinputpicker #containerCalendar th,
+.dateinputpicker #containerCalendar td {
+    padding-left: 5px;
     padding-right: 5px;
     padding-bottom: 2px;
     text-align: right;
 }
 
-.dateinputpicker table th {
-
+.dateinputpicker #containerCalendar[data-view-type="DAY"] th,
+.dateinputpicker #containerCalendar[data-view-type="DAY"] td {
+    width: calc(100% / 7);
 }
 
-.dateinputpicker table td {
-
-}
-
-.dateinputpicker table thead #hd-title {
+.dateinputpicker #containerCalendar[data-view-type="MONTH"] th,
+.dateinputpicker #containerCalendar[data-view-type="MONTH"] td {
+    width: calc(100% / 4);
     text-align: center;
+    padding: 4px 3px;
 }
 
-.dateinputpicker table tbody td:hover {
-    background-color: #59f2c0;
+.dateinputpicker #containerCalendar thead #hd-title {
+    text-align: center;
+    padding: 10px 0;
 }
 
-.dateinputpicker table .outside-day {
+.dateinputpicker #containerCalendar tbody td:hover {
+    background-color: #08d894;
+}
+
+.dateinputpicker #containerCalendar .outside-day {
     color: #BBB;
 }
 
-.dateinputpicker table .outside-day.weekend-day {
+.dateinputpicker #containerCalendar .outside-day.weekend-day {
     color: #ffafaf;
 }
 
-.dateinputpicker table .weekend-day {
+.dateinputpicker #containerCalendar .weekend-day {
     color: #F00;
 }
 
-.dateinputpicker table .selected-day {
-    background-color: #59f2c0; !important;
+.dateinputpicker #containerCalendar .selected-day {
+    background-color: #08d894; !important;
 }
